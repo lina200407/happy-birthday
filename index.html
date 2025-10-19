@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy birthday Mimi</title>
+    <style> :root {
+    --card-width: 350px;
+    --card-height: 450px;
+    --primary-color: #ffb6c1; /* Light Pink */
+    --secondary-color: #add8e6; /* Light Blue */
+    --font-color: #333;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f8f8ff; /* Ghost White background */
+    font-family: 'Georgia', serif;
+    perspective: 1000px; /* Needed for 3D flip effect */
+    overflow: hidden;
+}
+
+.card-container {
+    position: relative;
+    width: var(--card-width);
+    height: var(--card-height);
+    transform-style: preserve-3d;
+}
+
+/* --- Card Back (Static Part) --- */
+.card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: var(--secondary-color);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    font-size: 1.5em;
+    font-weight: bold;
+    z-index: 10;
+}
+
+.card-back .emoji {
+    font-size: 3em;
+    margin-top: 15px;
+}
+
+/* --- Card Front (Flipping Part) --- */
+.card-front {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform-origin: left center; /* Pivot the flip from the left edge */
+    transition: transform 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smooth, exciting animation */
+    cursor: pointer;
+    z-index: 20;
+    transform-style: preserve-3d;
+}
+
+/* The sealed flap view */
+.card-flap {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: var(--primary-color);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 1.2em;
+    font-weight: 600;
+    backface-visibility: hidden; /* Hide the back of the flap when flipped */
+}
+
+.card-flap .emoji-flap {
+    font-size: 4em;
+    margin-bottom: 10px;
+    animation: pulse 2s infinite; /* Little animation to draw attention */
+}
+
+/* The actual letter content inside the card */
+.card-letter {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-sizing: border-box;
+    transform: rotateY(180deg); /* Start flipped, so it shows when the flap opens */
+    backface-visibility: hidden;
+    overflow-y: auto; /* Allow scrolling for the letter */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    color: var(--font-color);
+    font-size: 0.9em;
+    line-height: 1.6;
+}
+
+.letter-content h1 {
+    color: var(--primary-color);
+    text-align: center;
+    font-size: 1.6em;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.letter-content p {
+    margin-bottom: 15px;
+}
+
+.letter-content .signature {
+    text-align: right;
+    font-style: italic;
+    font-weight: bold;
+    margin-top: 30px;
+    color: var(--secondary-color);
+}
+
+/* --- Active State (Flipped) --- */
+.card-front.open {
+    transform: rotateY(-180deg); /* This flips the card to reveal the letter */
+}
+
+/* --- Keyframe Animation --- */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+} </style>
+</head>
+<body>
+
+    <div class="card-container">
+        <div class="card-back">
+            <p>Happy Birthday, Mimi!</p>
+            <span class="emoji">🎉</span>
+        </div>
+
+        <div class="card-front" id="birthdayCard">
+            <div class="card-flap">
+                <span class="emoji-flap">💌</span>
+                <p>Click to Open!</p>
+            </div>
+            <div class="card-letter">
+                <div class="letter-content">
+                    <h1>💌 To My Dearest Mimi</h1>
+
+                    <p>Hey my favorite human 💕</p>
+
+                    <p>There are a lot of people in the world, but somehow, out of everyone, I got blessed with you — the one who understands my silence, laughs at my nonsense, and makes even the most ordinary days feel like a little piece of magic.</p>
+
+                    <p>You’ve been my safe place, my chaos partner, my free therapist, and my daily dose of sunshine . With you, every laugh is louder, every problem smaller, and every moment softer.</p>
+
+                    <p>I love how we can talk for hours about everything and nothing, how we send memes like they’re love letters, and how you always know when something’s wrong — even before I say a word. You’re rare, real, and honestly, the kind of soul I never want to lose.</p>
+
+                    <p>Thank you for being you — for your kindness, your energy, your weirdness, and your heart that shines brighter than any star (yes, even the dramatic ones 💕).</p>
+
+                    
+
+                    <p class="signature">With love
+                    <br>Lina ✨</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script> document.addEventListener('DOMContentLoaded', () => {
+    const card = document.getElementById('birthdayCard');
+
+    // Function to handle the card opening/closing
+    function toggleCard() {
+        // Toggle the 'open' class on the card-front element
+        card.classList.toggle('open');
+    }
+
+    // Attach the click event listener to the card
+    card.addEventListener('click', toggleCard);
+});</script>
+</body>
+</html>
