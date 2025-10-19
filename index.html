@@ -3,249 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday Mimi</title>
+    <title>A Responsive Unfolding Birthday Card for Mimi</title>
+    <!-- Load Tailwind CSS and set Inter font -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root {
-            --primary-color: #ffb6c1; /* Light Pink */
-            --secondary-color: #add8e6; /* Light Blue */
-            --font-color: #333;
+        /* Custom styles for the unfolding animation */
+        .unfold-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 1.5s ease-in-out, padding 0.8s ease-in;
+            padding-top: 0;
         }
 
-        * {
-            box-sizing: border-box;
+        .unfold-content.open {
+            /* Set a large max-height to ensure all content is visible */
+            max-height: 1000px; 
+            padding-top: 2rem;
+            /* Ensure the letter content has a nice padding when open */
+        }
+        
+        .card-header.open {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            transition: border-radius 0.3s;
         }
 
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            background-color: #f8f8ff; /* Ghost White background */
-            font-family: 'Georgia', serif;
-            overflow: auto;
+        .letter-content::-webkit-scrollbar {
+            width: 6px;
         }
-
-        .card-container {
-            position: relative;
-            width: 90vw;
-            max-width: 350px;
-            height: 60vh;
-            max-height: 450px;
-            transform-style: preserve-3d;
-            perspective: 1000px;
+        .letter-content::-webkit-scrollbar-thumb {
+            background-color: #ffb6c1;
+            border-radius: 3px;
         }
-
-        /* --- Card Back (Static Part) --- */
-        .card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-color: var(--secondary-color);
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: white;
-            font-size: clamp(1.2rem, 4vw, 1.5rem);
-            font-weight: bold;
-            z-index: 10;
-        }
-
-        .card-back .emoji {
-            font-size: clamp(2rem, 8vw, 3rem);
-            margin-top: 15px;
-        }
-
-        /* --- Card Front (Flipping Part) --- */
-        .card-front {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            transform-origin: left center;
-            transition: transform 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            cursor: pointer;
-            z-index: 20;
-            transform-style: preserve-3d;
-        }
-
-        /* The sealed flap view */
-        .card-flap {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-color: var(--primary-color);
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: clamp(1rem, 3.5vw, 1.2rem);
-            font-weight: 600;
-            backface-visibility: hidden;
-        }
-
-        .card-flap .emoji-flap {
-            font-size: clamp(2.5rem, 10vw, 4rem);
-            margin-bottom: 10px;
-            animation: pulse 2s infinite;
-        }
-
-        /* The actual letter content inside the card */
-        .card-letter {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-color: white;
-            border-radius: 15px;
-            padding: 20px;
-            transform: rotateY(180deg);
-            backface-visibility: hidden;
-            overflow-y: auto;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            color: var(--font-color);
-            font-size: clamp(0.8rem, 2.5vw, 0.9rem);
-            line-height: 1.6;
-        }
-
-        .letter-content h1 {
-            color: var(--primary-color);
-            text-align: center;
-            font-size: clamp(1.2rem, 4.5vw, 1.6rem);
-            margin-top: 0;
-            margin-bottom: 20px;
-        }
-
-        .letter-content p {
-            margin-bottom: 15px;
-        }
-
-        .letter-content .signature {
-            text-align: right;
-            font-style: italic;
-            font-weight: bold;
-            margin-top: 30px;
-            color: var(--secondary-color);
-        }
-
-        /* --- Active State (Flipped) --- */
-        .card-front.open {
-            transform: rotateY(-180deg);
-        }
-
-        /* --- Keyframe Animation --- */
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        /* --- Responsive Design --- */
-        @media (max-width: 768px) {
-            .card-container {
-                width: 85vw;
-                height: 65vh;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .card-container {
-                width: 90vw;
-                height: 70vh;
-            }
-            
-            body {
-                padding: 10px;
-            }
-            
-            .card-letter {
-                padding: 15px;
-            }
-            
-            .letter-content h1 {
-                margin-bottom: 15px;
-            }
-            
-            .letter-content p {
-                margin-bottom: 12px;
-            }
-            
-            .letter-content .signature {
-                margin-top: 20px;
-            }
-        }
-
-        @media (max-width: 320px) {
-            .card-container {
-                width: 95vw;
-                height: 75vh;
-            }
-            
-            .card-letter {
-                padding: 12px;
-            }
-        }
-
-        /* For very tall screens */
-        @media (max-height: 600px) {
-            .card-container {
-                height: 80vh;
-            }
+        .letter-content::-webkit-scrollbar-track {
+            background: transparent;
         }
     </style>
 </head>
-<body>
+<body class="bg-gray-50 flex flex-col items-center justify-center min-h-screen p-4 font-['Inter']">
 
-    <div class="card-container">
-        <div class="card-back">
-            <p>Happy Birthday, Mimi!</p>
-            <span class="emoji">🎉</span>
+    <!-- Card Container: Centered and sized for mobile screens -->
+    <div class="w-full max-w-md mx-auto shadow-2xl rounded-xl bg-white overflow-hidden my-auto">
+        
+        <!-- Card Header (The Flap/Sealed Part) -->
+        <div id="cardHeader" class="card-header bg-pink-400 text-white p-6 cursor-pointer hover:bg-pink-500 transition duration-300 rounded-xl flex flex-col items-center text-center">
+            <span class="text-5xl mb-2 animate-pulse">💌</span>
+            <h2 class="text-3xl font-extrabold">Click to Open Your Card!</h2>
+            <p class="text-lg font-light mt-1">Happy Birthday, Mimi!</p>
         </div>
 
-        <div class="card-front" id="birthdayCard">
-            <div class="card-flap">
-                <span class="emoji-flap">💌</span>
-                <p>Click to Open!</p>
-            </div>
-            <div class="card-letter">
-                <div class="letter-content">
-                    <h1>💌 To My Dearest Mimi</h1>
+        <!-- Unfolding Content (The Letter) -->
+        <div id="cardContent" class="unfold-content bg-white">
+            <div class="letter-content px-6 pb-6 pt-0 text-gray-700">
+                <h1 class="text-2xl font-extrabold text-pink-500 text-center mb-6">💌 To My Dearest Mimi</h1>
 
-                    <p>Hey my favorite human 💕</p>
+                <p class="mb-4">Hey my favorite human <span class="text-pink-500">💕</span></p>
 
-                    <p>There are a lot of people in the world, but somehow, out of everyone, I got blessed with you — the one who understands my silence, laughs at my nonsense, and makes even the most ordinary days feel like a little piece of magic.</p>
+                <p class="mb-4">There are a lot of people in the world, but somehow, out of everyone, I got blessed with you — the one who understands my silence, laughs at my nonsense, and makes even the most ordinary days feel like a little piece of magic.</p>
 
-                    <p>You've been my safe place, my chaos partner, my free therapist, and my daily dose of sunshine . With you, every laugh is louder, every problem smaller, and every moment softer.</p>
+                <p class="mb-4">You’ve been my safe place, my chaos partner, my free therapist, and my daily dose of sunshine (even when you’re a bit cloudy <span class="text-yellow-500">😜</span>). With you, every laugh is louder, every problem smaller, and every moment softer.</p>
 
-                    <p>I love how we can talk for hours about everything and nothing, how we send memes like they're love letters, and how you always know when something's wrong — even before I say a word. You're rare, real, and honestly, the kind of soul I never want to lose.</p>
+                <p class="mb-4">I love how we can talk for hours about everything and nothing, how we send memes like they’re love letters, and how you always know when something’s wrong — even before I say a word. You’re rare, real, and honestly, the kind of soul I never want to lose.</p>
 
-                    <p>Thank you for being you — for your kindness, your energy, your weirdness, and your heart that shines brighter than any star (yes, even the dramatic ones 💕).</p>
+                <p class="mb-6">Thank you for being you — for your kindness, your energy, your weirdness, and your heart that shines brighter than any star (yes, even the dramatic ones <span class="text-yellow-400">🌟</span>).</p>
 
-                    <p class="signature">With love
-                    <br>Lina ✨</p>
-                </div>
+                <p class="mb-4">So here’s a little corner of the internet just for you — because you deserve something as beautiful, funny, and unforgettable as you are.</p>
+
+                <p class="text-right mt-6 font-semibold text-gray-600">
+                    With love (and a lot of inside jokes I’ll never forget),<br>
+                    Lina <span class="text-yellow-600">💫</span>
+                </p>
             </div>
         </div>
+
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const card = document.getElementById('birthdayCard');
+            const header = document.getElementById('cardHeader');
+            const content = document.getElementById('cardContent');
 
-            // Function to handle the card opening/closing
+            // Function to handle the card unfolding
             function toggleCard() {
-                // Toggle the 'open' class on the card-front element
-                card.classList.toggle('open');
+                const isOpen = content.classList.contains('open');
+                
+                // Toggle the 'open' class for content and header
+                content.classList.toggle('open');
+                header.classList.toggle('open');
+
+                // Update text on the header
+                const textElement = header.querySelector('h2');
+                if (isOpen) {
+                    textElement.textContent = 'Click to Open Your Card!';
+                    header.querySelector('span').textContent = '💌';
+                } else {
+                    textElement.textContent = 'Happy Reading!';
+                    header.querySelector('span').textContent = '🎉';
+                }
             }
 
-            // Attach the click event listener to the card
-            card.addEventListener('click', toggleCard);
+            // Attach the click event listener to the header
+            header.addEventListener('click', toggleCard);
         });
     </script>
 </body>
